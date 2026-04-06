@@ -1,0 +1,41 @@
+# .NET build output
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+.nuget/
+packages/
+
+# EF Core migrations temp
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+*.log
+logs/
+
+# Uploads (local storage)
+uploads/
+
+# Environment secrets
+.env
+.env.local
+appsettings.Production.json
+
+# Frontend
+ucaa-hrms-frontend/node_modules/
+ucaa-hrms-frontend/build/
+
+# Docker
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

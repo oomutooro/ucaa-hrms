@@ -1,0 +1,39 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
+
+:root {
+  --ucaa-blue: #003366;
+  --ucaa-sky: #00aeef;
+  --bg: #eef5fb;
+  --surface: #ffffff;
+  --text: #1c2a3a;
+  --muted: #607086;
+  --border: #d9e6f2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Barlow", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top right, #cdefff 0%, rgba(205, 239, 255, 0) 40%),
+    linear-gradient(160deg, #f6fbff 0%, #ecf4fb 100%);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Space Grotesk", sans-serif;
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
