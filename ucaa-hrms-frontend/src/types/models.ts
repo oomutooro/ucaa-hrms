@@ -105,6 +105,40 @@ export interface ShiftAssignment {
   shiftCode: string;
 }
 
+export interface AttendanceRecord {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  shiftAssignmentId?: string | null;
+  attendanceDate: string;
+  shiftType?: number | null;
+  status: number;
+  checkInTime: string;
+  checkOutTime?: string | null;
+  hoursWorked: number;
+  isOpen: boolean;
+  notes?: string | null;
+}
+
+export interface EmployeeAttendanceRollup {
+  employeeId: string;
+  employeeName: string;
+  presentDays: number;
+  lateDays: number;
+  totalHoursWorked: number;
+}
+
+export interface AttendanceSummary {
+  scheduledToday: number;
+  checkedInToday: number;
+  lateToday: number;
+  pendingClockOuts: number;
+  totalHoursToday: number;
+  upcomingAssignments: ShiftAssignment[];
+  recentAttendance: AttendanceRecord[];
+  monthlyRollup: EmployeeAttendanceRollup[];
+}
+
 export interface JobGrade {
   id: string;
   gradeCode: string;

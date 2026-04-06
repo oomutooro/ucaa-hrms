@@ -17,6 +17,7 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
     public DbSet<Department> Departments => Set<Department>();
     public DbSet<LeaveRequest> LeaveRequests => Set<LeaveRequest>();
     public DbSet<ShiftAssignment> ShiftAssignments => Set<ShiftAssignment>();
+    public DbSet<AttendanceRecord> AttendanceRecords => Set<AttendanceRecord>();
     public DbSet<PayrollRecord> PayrollRecords => Set<PayrollRecord>();
     public DbSet<HrDocument> HrDocuments => Set<HrDocument>();
     public DbSet<JobGrade> JobGrades => Set<JobGrade>();
@@ -72,11 +73,26 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
 
         builder.Entity<ShiftAssignment>(cfg =>
         {
-            cfg.HasIndex(s => new { s.ShiftDate, s.ShiftCode }).IsUnique();
+            cfg.HasIndex(s => s.ShiftCode).IsUnique();
             cfg.Property(s => s.ShiftCode).HasMaxLength(40).IsRequired();
             cfg.HasOne(s => s.Employee)
                 .WithMany()
                 .HasForeignKey(s => s.EmployeeId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        builder.Entity<AttendanceRecord>(cfg =>
+        {
+            cfg.HasIndex(a => new { a.EmployeeId, a.AttendanceDate });
+            cfg.Property(a => a.HoursWorked).HasColumnType("decimal(10,2)").IsRequired();
+            cfg.Property(a => a.Notes).HasMaxLength(500);
+            cfg.HasOne(a => a.Employee)
+                .WithMany()
+                .HasForeignKey(a => a.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+            cfg.HasOne(a => a.ShiftAssignment)
+                .WithMany()
+                .HasForeignKey(a => a.ShiftAssignmentId)
                 .OnDelete(DeleteBehavior.SetNull);
         });
 
