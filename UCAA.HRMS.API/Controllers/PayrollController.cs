@@ -21,7 +21,15 @@ public sealed class PayrollController : ControllerBase
     public Task<List<PayrollRecordDto>> GetAll(CancellationToken cancellationToken) =>
         _payrollService.ListAsync(cancellationToken);
 
+    [HttpGet("summary")]
+    public Task<PayrollSummaryDto> GetSummary(CancellationToken cancellationToken) =>
+        _payrollService.GetSummaryAsync(cancellationToken);
+
     [HttpPost]
     public Task<PayrollRecordDto> Create([FromBody] CreatePayrollRecordRequest request, CancellationToken cancellationToken) =>
         _payrollService.CreateAsync(request, cancellationToken);
+
+    [HttpPatch("{id:guid}/status")]
+    public Task<PayrollRecordDto> UpdateStatus(Guid id, [FromBody] UpdatePayrollStatusRequest request, CancellationToken cancellationToken) =>
+        _payrollService.UpdateStatusAsync(id, request, cancellationToken);
 }

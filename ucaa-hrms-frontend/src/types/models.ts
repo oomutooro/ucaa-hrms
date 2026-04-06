@@ -89,11 +89,35 @@ export interface PayrollRecord {
   employeeId: string;
   employeeName: string;
   basicSalary: number;
+  transportAllowance: number;
+  housingAllowance: number;
+  otherAllowance: number;
   allowances: number;
+  payeTax: number;
+  pensionDeduction: number;
+  loanDeduction: number;
+  otherDeduction: number;
   deductions: number;
+  grossPay: number;
   netPay: number;
   payPeriod: string;
+  status: number;
+  statusLabel: string;
+  paidAtUtc?: string | null;
   notes?: string;
+}
+
+export interface PayrollSummary {
+  recordCount: number;
+  draftCount: number;
+  approvedCount: number;
+  paidCount: number;
+  totalGrossPay: number;
+  totalDeductions: number;
+  totalNetPay: number;
+  totalPaye: number;
+  totalPension: number;
+  latestPayPeriod?: string | null;
 }
 
 export interface ShiftAssignment {

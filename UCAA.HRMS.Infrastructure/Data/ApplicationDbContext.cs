@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using UCAA.HRMS.Domain.Entities;
+using UCAA.HRMS.Domain.Enums;
 using UCAA.HRMS.Infrastructure.Auth;
 
 namespace UCAA.HRMS.Infrastructure.Data;
@@ -98,6 +99,21 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
 
         builder.Entity<PayrollRecord>(cfg =>
         {
+            cfg.HasIndex(p => new { p.EmployeeId, p.PayPeriod }).IsUnique();
+            cfg.Property(p => p.BasicSalary).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(p => p.TransportAllowance).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(p => p.HousingAllowance).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(p => p.OtherAllowance).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(p => p.Allowances).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(p => p.PayeTax).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(p => p.PensionDeduction).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(p => p.LoanDeduction).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(p => p.OtherDeduction).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(p => p.Deductions).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(p => p.GrossPay).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(p => p.NetPay).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(p => p.Status).HasDefaultValue(PayrollStatus.Draft);
+            cfg.Property(p => p.Notes).HasMaxLength(1000);
             cfg.HasOne(p => p.Employee)
                 .WithMany()
                 .HasForeignKey(p => p.EmployeeId)

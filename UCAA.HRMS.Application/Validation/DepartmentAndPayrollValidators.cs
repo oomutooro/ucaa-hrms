@@ -19,10 +19,20 @@ public sealed class CreatePayrollRecordRequestValidator : AbstractValidator<Crea
     public CreatePayrollRecordRequestValidator()
     {
         RuleFor(x => x.BasicSalary).GreaterThanOrEqualTo(0);
-        RuleFor(x => x.Allowances).GreaterThanOrEqualTo(0);
-        RuleFor(x => x.Deductions).GreaterThanOrEqualTo(0);
+        RuleFor(x => x.TransportAllowance).GreaterThanOrEqualTo(0);
+        RuleFor(x => x.HousingAllowance).GreaterThanOrEqualTo(0);
+        RuleFor(x => x.OtherAllowance).GreaterThanOrEqualTo(0);
+        RuleFor(x => x.PayeTax).GreaterThanOrEqualTo(0);
+        RuleFor(x => x.PensionDeduction).GreaterThanOrEqualTo(0);
+        RuleFor(x => x.LoanDeduction).GreaterThanOrEqualTo(0);
+        RuleFor(x => x.OtherDeduction).GreaterThanOrEqualTo(0);
         RuleFor(x => x)
-            .Must(x => x.Deductions <= (x.BasicSalary + x.Allowances) * 0.5m)
+            .Must(x =>
+            {
+                var allowances = x.TransportAllowance + x.HousingAllowance + x.OtherAllowance;
+                var deductions = x.PayeTax + x.PensionDeduction + x.LoanDeduction + x.OtherDeduction;
+                return deductions <= (x.BasicSalary + allowances) * 0.5m;
+            })
             .WithMessage("Total deductions cannot exceed 50% of gross monthly pay.");
     }
 }
