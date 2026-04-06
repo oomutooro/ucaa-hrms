@@ -9,12 +9,18 @@ public sealed class EmployeeService : IEmployeeService
 {
     private readonly IEmployeeRepository _employees;
     private readonly IDepartmentRepository _departments;
+    private readonly IJobArchitectureRepository _jobArchitecture;
     private readonly IUnitOfWork _unitOfWork;
 
-    public EmployeeService(IEmployeeRepository employees, IDepartmentRepository departments, IUnitOfWork unitOfWork)
+    public EmployeeService(
+        IEmployeeRepository employees,
+        IDepartmentRepository departments,
+        IJobArchitectureRepository jobArchitecture,
+        IUnitOfWork unitOfWork)
     {
         _employees = employees;
         _departments = departments;
+        _jobArchitecture = jobArchitecture;
         _unitOfWork = unitOfWork;
     }
 
@@ -22,6 +28,14 @@ public sealed class EmployeeService : IEmployeeService
     {
         var data = await _employees.ListAsync(cancellationToken);
         return data.Select(Map).ToList();
+    }
+
+    public async Task<EmployeeDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var employee = await _employees.GetByIdAsync(id, cancellationToken)
+            ?? throw new AppException("Employee not found.", 404);
+
+        return Map(employee);
     }
 
     public async Task<EmployeeDto> CreateAsync(CreateEmployeeRequest request, CancellationToken cancellationToken = default)
@@ -44,6 +58,17 @@ public sealed class EmployeeService : IEmployeeService
             throw new AppException("Employees must be assigned to a department or section under a directorate.");
         }
 
+        if (request.PositionId.HasValue)
+        {
+            var position = await _jobArchitecture.GetPositionByIdAsync(request.PositionId.Value, cancellationToken)
+                ?? throw new AppException("Selected position was not found.", 404);
+
+            if (position.DepartmentId != request.DepartmentId)
+            {
+                throw new AppException("Selected position must belong to the selected department.");
+            }
+        }
+
         var employee = new Employee
         {
             FullName = request.FullName,
@@ -54,6 +79,7 @@ public sealed class EmployeeService : IEmployeeService
             FirstEmploymentDate = request.FirstEmploymentDate,
             JobLevel = request.JobLevel,
             DepartmentId = request.DepartmentId,
+            PositionId = request.PositionId,
             JobTitle = request.JobTitle,
             EmploymentType = request.EmploymentType,
             AnnualLeaveBalanceDays = request.InitialLeaveBalanceDays ?? GetAnnualLeaveEntitlementDays(request.JobLevel)
@@ -84,6 +110,17 @@ public sealed class EmployeeService : IEmployeeService
             throw new AppException("Employees must be assigned to a department or section under a directorate.");
         }
 
+        if (request.PositionId.HasValue)
+        {
+            var position = await _jobArchitecture.GetPositionByIdAsync(request.PositionId.Value, cancellationToken)
+                ?? throw new AppException("Selected position was not found.", 404);
+
+            if (position.DepartmentId != request.DepartmentId)
+            {
+                throw new AppException("Selected position must belong to the selected department.");
+            }
+        }
+
         employee.FullName = request.FullName;
         employee.Email = request.Email;
         employee.PhoneNumber = request.PhoneNumber;
@@ -91,6 +128,7 @@ public sealed class EmployeeService : IEmployeeService
         employee.FirstEmploymentDate = request.FirstEmploymentDate;
         employee.JobLevel = request.JobLevel;
         employee.DepartmentId = request.DepartmentId;
+        employee.PositionId = request.PositionId;
         employee.JobTitle = request.JobTitle;
         employee.EmploymentType = request.EmploymentType;
         employee.UpdatedAtUtc = DateTime.UtcNow;
@@ -140,6 +178,9 @@ public sealed class EmployeeService : IEmployeeService
         var serviceGratuityBonusMonths = (clampedYearsOfService / 10) * 2;
         var serviceGratuityTotalMonths = serviceGratuityBaseMonths + serviceGratuityBonusMonths;
         var redundancySeveranceMonths = clampedYearsOfService;
+        var positionTitle = employee.Position?.Title ?? string.Empty;
+        var salaryGradeCode = employee.Position?.JobDescription?.JobGrade?.GradeCode ?? $"L{employee.JobLevel}";
+        var salaryGradeTitle = employee.Position?.JobDescription?.JobGrade?.GradeTitle ?? $"Level {employee.JobLevel}";
 
         return new(
             employee.Id,
@@ -164,6 +205,10 @@ public sealed class EmployeeService : IEmployeeService
             redundancySeveranceMonths,
             employee.DepartmentId,
             employee.Department?.Name ?? string.Empty,
+                employee.PositionId,
+                positionTitle,
+                salaryGradeCode,
+                salaryGradeTitle,
             employee.JobTitle,
             employee.EmploymentType,
             employee.AnnualLeaveBalanceDays);

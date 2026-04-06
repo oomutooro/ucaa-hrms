@@ -15,10 +15,21 @@ public sealed class EmployeeRepository : IEmployeeRepository
     }
 
     public Task<List<Employee>> ListAsync(CancellationToken cancellationToken = default) =>
-        _db.Employees.Include(e => e.Department).OrderBy(e => e.FullName).ToListAsync(cancellationToken);
+        _db.Employees
+            .Include(e => e.Department)
+            .Include(e => e.Position)
+                .ThenInclude(p => p!.JobDescription)
+                    .ThenInclude(j => j!.JobGrade)
+            .OrderBy(e => e.FullName)
+            .ToListAsync(cancellationToken);
 
     public Task<Employee?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
-        _db.Employees.Include(e => e.Department).FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+        _db.Employees
+            .Include(e => e.Department)
+            .Include(e => e.Position)
+                .ThenInclude(p => p!.JobDescription)
+                    .ThenInclude(j => j!.JobGrade)
+            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 
     public Task<bool> EmailExistsAsync(string email, Guid? excludeId = null, CancellationToken cancellationToken = default) =>
         _db.Employees.AnyAsync(e => e.Email.ToLower() == email.ToLower() && (!excludeId.HasValue || e.Id != excludeId.Value), cancellationToken);

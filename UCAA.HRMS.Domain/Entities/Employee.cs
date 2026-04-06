@@ -14,9 +14,12 @@ public sealed class Employee : BaseEntity
     public int JobLevel { get; set; }
     public Guid DepartmentId { get; set; }
     public Department? Department { get; set; }
+    public Guid? PositionId { get; set; }
+    public Position? Position { get; set; }
     public string JobTitle { get; set; } = string.Empty;
     public EmploymentType EmploymentType { get; set; }
     public Guid? UserId { get; set; }
     public decimal AnnualLeaveBalanceDays { get; set; } = 30;
     public ICollection<LeaveRequest> LeaveRequests { get; set; } = new List<LeaveRequest>();
+    public ICollection<BenefitEnrollment> BenefitEnrollments { get; set; } = new List<BenefitEnrollment>();
 }

@@ -39,9 +39,61 @@ export interface Employee {
   redundancySeveranceMonths: number;
   departmentId: string;
   departmentName: string;
+  positionId?: string | null;
+  positionTitle: string;
+  salaryGradeCode: string;
+  salaryGradeTitle: string;
   jobTitle: string;
   employmentType: number;
   annualLeaveBalanceDays: number;
+}
+
+export interface BenefitPlan {
+  id: string;
+  name: string;
+  planType: number;
+  planTypeLabel: string;
+  description: string;
+  isTaxable: boolean;
+  isActive: boolean;
+  defaultEmployerContribution: number;
+  defaultEmployeeContribution: number;
+  activeEnrollments: number;
+}
+
+export interface BenefitEnrollment {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  employeeNumber: string;
+  employeeJobLevel: number;
+  employeeJobTitle: string;
+  salaryGradeCode: string;
+  salaryGradeTitle: string;
+  benefitPlanId: string;
+  benefitPlanName: string;
+  benefitPlanType: number;
+  benefitPlanTypeLabel: string;
+  startDate: string;
+  endDate?: string | null;
+  status: number;
+  statusLabel: string;
+  employerContribution: number;
+  employeeContribution: number;
+  totalContribution: number;
+  notes: string;
+}
+
+export interface BenefitSummary {
+  planCount: number;
+  activePlanCount: number;
+  enrollmentCount: number;
+  activeEnrollmentCount: number;
+  totalMonthlyEmployerContribution: number;
+  totalMonthlyEmployeeContribution: number;
+  totalMonthlyContribution: number;
+  enrollmentsByPlanType: Record<string, number>;
+  activeEnrollmentsBySalaryGrade: Record<string, number>;
 }
 
 export interface LeaveRequest {

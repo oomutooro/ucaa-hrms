@@ -21,6 +21,10 @@ public sealed class EmployeesController : ControllerBase
     public Task<List<EmployeeDto>> GetAll(CancellationToken cancellationToken) =>
         _employeeService.ListAsync(cancellationToken);
 
+    [HttpGet("{id:guid}")]
+    public Task<EmployeeDto> GetById(Guid id, CancellationToken cancellationToken) =>
+        _employeeService.GetByIdAsync(id, cancellationToken);
+
     [HttpPost]
     [Authorize(Roles = "Admin,HR Manager")]
     public Task<EmployeeDto> Create([FromBody] CreateEmployeeRequest request, CancellationToken cancellationToken) =>

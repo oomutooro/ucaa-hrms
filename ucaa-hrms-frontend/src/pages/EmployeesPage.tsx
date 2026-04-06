@@ -1,10 +1,13 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import apiClient from "../api/apiClient";
-import { Department, Employee } from "../types/models";
+import { Department, Employee, Position } from "../types/models";
 
 export default function EmployeesPage() {
+  const navigate = useNavigate();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
+  const [positions, setPositions] = useState<Position[]>([]);
   const [search, setSearch] = useState("");
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -17,6 +20,7 @@ export default function EmployeesPage() {
     firstEmploymentDate: "",
     jobLevel: 9,
     departmentId: "",
+    positionId: "",
     jobTitle: "",
     employmentType: 1,
   });
@@ -28,6 +32,11 @@ export default function EmployeesPage() {
     apiClient.get<Department[]>("/departments")
       .then((res) => {
         setDepartments(res.data);
+      })
+      .catch(() => setLoadError("Failed to load employees/departments. Please sign in again and refresh."));
+    apiClient.get<Position[]>("/jobarchitecture/positions")
+      .then((res) => {
+        setPositions(res.data);
         setLoadError(null);
       })
       .catch(() => setLoadError("Failed to load employees/departments. Please sign in again and refresh."));
@@ -47,11 +56,17 @@ export default function EmployeesPage() {
     [departments]
   );
 
+  const positionsForSelectedDepartment = useMemo(
+    () => positions.filter((p) => p.departmentId === form.departmentId),
+    [positions, form.departmentId]
+  );
+
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
     await apiClient.post("/employees", {
       ...form,
       departmentId: form.departmentId,
+      positionId: form.positionId || null,
       employmentType: Number(form.employmentType),
     });
     setForm({
@@ -63,6 +78,7 @@ export default function EmployeesPage() {
       firstEmploymentDate: "",
       jobLevel: 9,
       departmentId: "",
+      positionId: "",
       jobTitle: "",
       employmentType: 1,
     });
@@ -119,10 +135,24 @@ export default function EmployeesPage() {
           </div>
           <div className="form-group">
             <label>Department</label>
-            <select className="form-control" value={form.departmentId} onChange={(e) => setForm({ ...form, departmentId: e.target.value })} required>
+            <select
+              className="form-control"
+              value={form.departmentId}
+              onChange={(e) => setForm({ ...form, departmentId: e.target.value, positionId: "" })}
+              required
+            >
               <option value="">Select department or section</option>
               {assignableDepartments.map((d) => (
                 <option value={d.id} key={d.id}>{d.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Position (drives salary grade)</label>
+            <select className="form-control" value={form.positionId} onChange={(e) => setForm({ ...form, positionId: e.target.value })}>
+              <option value="">Unassigned (use job level fallback)</option>
+              {positionsForSelectedDepartment.map((p) => (
+                <option value={p.id} key={p.id}>{p.title} ({p.jobGradeCode})</option>
               ))}
             </select>
           </div>
@@ -158,6 +188,8 @@ export default function EmployeesPage() {
                   <th>ID</th>
                   <th>Department</th>
                   <th>Level</th>
+                  <th>Salary Grade</th>
+                  <th>Position</th>
                   <th>Title</th>
                   <th>Age</th>
                   <th>Service</th>
@@ -171,9 +203,9 @@ export default function EmployeesPage() {
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
-                  <tr><td colSpan={14} style={{ textAlign: "center", color: "var(--text-muted)", padding: 24 }}>No employees found</td></tr>
+                  <tr><td colSpan={16} style={{ textAlign: "center", color: "var(--text-muted)", padding: 24 }}>No employees found</td></tr>
                 ) : filtered.map((e) => (
-                  <tr key={e.id}>
+                  <tr key={e.id} style={{ cursor: "pointer" }} onClick={() => navigate(`/employees/${e.id}`)}>
                     <td>
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <div className="emp-avatar" style={{ width: 30, height: 30, fontSize: 12 }}>{e.fullName[0]}</div>
@@ -184,6 +216,11 @@ export default function EmployeesPage() {
                     <td>{e.employeeId}</td>
                     <td>{e.departmentName}</td>
                     <td>L{e.jobLevel}</td>
+                    <td>
+                      <div style={{ fontWeight: 700 }}>{e.salaryGradeCode}</div>
+                      <div style={{ color: "var(--text-muted)", fontSize: 11 }}>{e.salaryGradeTitle}</div>
+                    </td>
+                    <td>{e.positionTitle || "-"}</td>
                     <td>{e.jobTitle}</td>
                     <td>{e.age}</td>
                     <td>{e.yearsOfService} yrs</td>

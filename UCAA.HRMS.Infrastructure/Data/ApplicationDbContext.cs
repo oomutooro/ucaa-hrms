@@ -30,6 +30,8 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
     public DbSet<OnboardingTemplateTask> OnboardingTemplateTasks => Set<OnboardingTemplateTask>();
     public DbSet<EmployeeOnboarding> EmployeeOnboardings => Set<EmployeeOnboarding>();
     public DbSet<OnboardingItem> OnboardingItems => Set<OnboardingItem>();
+    public DbSet<BenefitPlan> BenefitPlans => Set<BenefitPlan>();
+    public DbSet<BenefitEnrollment> BenefitEnrollments => Set<BenefitEnrollment>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -51,6 +53,10 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
                 .WithMany(d => d.Employees)
                 .HasForeignKey(e => e.DepartmentId)
                 .OnDelete(DeleteBehavior.Restrict);
+            cfg.HasOne(e => e.Position)
+                .WithMany()
+                .HasForeignKey(e => e.PositionId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         builder.Entity<Department>(cfg =>
@@ -226,6 +232,31 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
                 .WithMany(ob => ob.Items)
                 .HasForeignKey(i => i.OnboardingId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<BenefitPlan>(cfg =>
+        {
+            cfg.HasIndex(p => p.Name).IsUnique();
+            cfg.Property(p => p.Name).HasMaxLength(120).IsRequired();
+            cfg.Property(p => p.Description).HasMaxLength(600).IsRequired();
+            cfg.Property(p => p.DefaultEmployerContribution).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(p => p.DefaultEmployeeContribution).HasColumnType("decimal(18,2)").IsRequired();
+        });
+
+        builder.Entity<BenefitEnrollment>(cfg =>
+        {
+            cfg.HasIndex(e => new { e.EmployeeId, e.BenefitPlanId, e.StartDate }).IsUnique();
+            cfg.Property(e => e.EmployerContribution).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(e => e.EmployeeContribution).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(e => e.Notes).HasMaxLength(1000);
+            cfg.HasOne(e => e.Employee)
+                .WithMany(emp => emp.BenefitEnrollments)
+                .HasForeignKey(e => e.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+            cfg.HasOne(e => e.BenefitPlan)
+                .WithMany(p => p.Enrollments)
+                .HasForeignKey(e => e.BenefitPlanId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

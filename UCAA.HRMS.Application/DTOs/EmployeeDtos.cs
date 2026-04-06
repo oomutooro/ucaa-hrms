@@ -25,6 +25,10 @@ public sealed record EmployeeDto(
     decimal RedundancySeveranceMonths,
     Guid DepartmentId,
     string DepartmentName,
+    Guid? PositionId,
+    string PositionTitle,
+    string SalaryGradeCode,
+    string SalaryGradeTitle,
     string JobTitle,
     EmploymentType EmploymentType,
     decimal AnnualLeaveBalanceDays);
@@ -38,6 +42,7 @@ public sealed record CreateEmployeeRequest(
     DateOnly FirstEmploymentDate,
     int JobLevel,
     Guid DepartmentId,
+    Guid? PositionId,
     string JobTitle,
     EmploymentType EmploymentType,
     decimal? InitialLeaveBalanceDays);
@@ -50,5 +55,6 @@ public sealed record UpdateEmployeeRequest(
     DateOnly FirstEmploymentDate,
     int JobLevel,
     Guid DepartmentId,
+    Guid? PositionId,
     string JobTitle,
     EmploymentType EmploymentType);
