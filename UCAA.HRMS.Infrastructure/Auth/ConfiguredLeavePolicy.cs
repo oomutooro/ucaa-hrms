@@ -18,6 +18,10 @@ public sealed class ConfiguredLeavePolicy : ILeavePolicy
     {
         LeaveType.Annual => _options.AnnualMaxDaysPerRequest,
         LeaveType.Sick => _options.SickMaxDaysPerRequest,
+        LeaveType.Maternity => _options.MaternityMaxDaysPerRequest,
+        LeaveType.Paternity => _options.PaternityMaxDaysPerRequest,
+        LeaveType.Compassionate => _options.CompassionateMaxDaysPerRequest,
+        LeaveType.Study => _options.StudyMaxDaysPerRequest,
         LeaveType.Emergency => _options.EmergencyMaxDaysPerRequest,
         _ => 5
     };

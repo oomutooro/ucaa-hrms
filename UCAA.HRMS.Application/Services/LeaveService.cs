@@ -47,6 +47,24 @@ public sealed class LeaveService : ILeaveService
             throw new AppException("Requested leave days exceed configured limit.");
         }
 
+        if (request.LeaveType == LeaveType.Compassionate)
+        {
+            var periodStart = request.StartDate.AddDays(-365);
+            var employeeLeaveHistory = await _leaveRequests.ListAsync(cancellationToken);
+            var compassionateDaysInLastYear = employeeLeaveHistory
+                .Where(x => x.EmployeeId == request.EmployeeId
+                            && x.LeaveType == LeaveType.Compassionate
+                            && x.Status != LeaveStatus.Rejected
+                            && x.StartDate >= periodStart
+                            && x.StartDate <= request.StartDate)
+                .Sum(x => x.EndDate.DayNumber - x.StartDate.DayNumber + 1);
+
+            if (compassionateDaysInLastYear + requestedDays > 14)
+            {
+                throw new AppException("Compassionate leave cannot exceed 14 days within 12 months.");
+            }
+        }
+
         if (request.LeaveType == LeaveType.Annual && employee.AnnualLeaveBalanceDays < requestedDays)
         {
             throw new AppException("Insufficient annual leave balance.");
@@ -106,6 +124,29 @@ public sealed class LeaveService : ILeaveService
             leaveRequest.Status,
             leaveRequest.StartDate,
             leaveRequest.EndDate,
+            leaveRequest.EndDate.DayNumber - leaveRequest.StartDate.DayNumber + 1,
+            GetSickLeavePayPercent(leaveRequest),
             leaveRequest.Reason,
             leaveRequest.ReviewerComment);
+
+    private static int? GetSickLeavePayPercent(LeaveRequest leaveRequest)
+    {
+        if (leaveRequest.LeaveType != LeaveType.Sick)
+        {
+            return null;
+        }
+
+        var requestedDays = leaveRequest.EndDate.DayNumber - leaveRequest.StartDate.DayNumber + 1;
+        if (requestedDays <= 180)
+        {
+            return 100;
+        }
+
+        if (requestedDays <= 270)
+        {
+            return 75;
+        }
+
+        return 50;
+    }
 }

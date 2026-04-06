@@ -10,6 +10,8 @@ public sealed record LeaveRequestDto(
     LeaveStatus Status,
     DateOnly StartDate,
     DateOnly EndDate,
+    int RequestedDays,
+    int? SickLeavePayPercent,
     string Reason,
     string? ReviewerComment);
 

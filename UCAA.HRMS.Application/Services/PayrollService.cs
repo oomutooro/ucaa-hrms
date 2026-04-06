@@ -29,6 +29,12 @@ public sealed class PayrollService : IPayrollService
         var employee = await _employees.GetByIdAsync(request.EmployeeId, cancellationToken)
             ?? throw new AppException("Employee not found.", 404);
 
+        var grossPay = request.BasicSalary + request.Allowances;
+        if (request.Deductions > grossPay * 0.5m)
+        {
+            throw new AppException("Total deductions cannot exceed 50% of gross monthly pay.");
+        }
+
         var record = new PayrollRecord
         {
             EmployeeId = request.EmployeeId,

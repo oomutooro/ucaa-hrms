@@ -3,14 +3,25 @@ import apiClient from "../api/apiClient";
 import { Employee, LeaveRequest } from "../types/models";
 
 const leaveTypes = [
-  { id: 1, name: "Annual Leave", days: 21 },
+  { id: 1, name: "Annual Leave", days: 36 },
   { id: 2, name: "Sick Leave", days: 14 },
-  { id: 3, name: "Emergency Leave", days: 5 },
-  { id: 4, name: "Maternity Leave", days: 60 },
+  { id: 3, name: "Maternity Leave", days: 60 },
+  { id: 4, name: "Paternity Leave", days: 4 },
+  { id: 5, name: "Compassionate Leave", days: 5 },
+  { id: 6, name: "Study Leave", days: 180 },
+  { id: 7, name: "Emergency Leave", days: 5 },
 ];
 
-const leaveTypeLabel: Record<number, string> = { 1: "Annual", 2: "Sick", 3: "Emergency", 4: "Maternity" };
-const leaveStatusLabel: Record<number, string> = { 0: "Pending", 1: "Approved", 2: "Declined" };
+const leaveTypeLabel: Record<number, string> = {
+  1: "Annual",
+  2: "Sick",
+  3: "Maternity",
+  4: "Paternity",
+  5: "Compassionate",
+  6: "Study",
+  7: "Emergency"
+};
+const leaveStatusLabel: Record<number, string> = { 1: "Pending", 2: "Approved", 3: "Rejected" };
 
 export default function LeavePage() {
   const [items, setItems] = useState<LeaveRequest[]>([]);
@@ -111,12 +122,14 @@ export default function LeavePage() {
                 <th>Start</th>
                 <th>End</th>
                 <th>Status</th>
+                <th>Days</th>
+                <th>Sick Pay</th>
                 <th>Reason</th>
               </tr>
             </thead>
             <tbody>
               {items.length === 0 ? (
-                <tr><td colSpan={6} style={{ textAlign: "center", color: "var(--text-muted)", padding: 24 }}>No leave requests found</td></tr>
+                <tr><td colSpan={8} style={{ textAlign: "center", color: "var(--text-muted)", padding: 24 }}>No leave requests found</td></tr>
               ) : items.map(item => (
                 <tr key={item.id}>
                   <td>{item.employeeName}</td>
@@ -125,11 +138,13 @@ export default function LeavePage() {
                   <td>{item.endDate}</td>
                   <td>
                     <span style={{
-                      background: item.status === 1 ? "#dcfce7" : item.status === 2 ? "#fee2e2" : "#fef9c3",
-                      color: item.status === 1 ? "var(--green)" : item.status === 2 ? "var(--red)" : "#854d0e",
+                      background: item.status === 2 ? "#dcfce7" : item.status === 3 ? "#fee2e2" : "#fef9c3",
+                      color: item.status === 2 ? "var(--green)" : item.status === 3 ? "var(--red)" : "#854d0e",
                       padding: "3px 10px", borderRadius: 50, fontSize: 12, fontWeight: 600
                     }}>{leaveStatusLabel[item.status] ?? "Pending"}</span>
                   </td>
+                  <td>{item.requestedDays}</td>
+                  <td>{item.sickLeavePayPercent ? `${item.sickLeavePayPercent}%` : "-"}</td>
                   <td style={{ maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.reason}</td>
                 </tr>
               ))}

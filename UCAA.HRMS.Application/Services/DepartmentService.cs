@@ -29,12 +29,27 @@ public sealed class DepartmentService : IDepartmentService
             throw new AppException("Department name already exists.");
         }
 
+        if (!request.ParentDepartmentId.HasValue)
+        {
+            throw new AppException("Select an existing directorate or department as the parent.");
+        }
+
         if (request.ParentDepartmentId.HasValue)
         {
             var parent = await _departments.GetByIdAsync(request.ParentDepartmentId.Value, cancellationToken);
             if (parent is null)
             {
                 throw new AppException("Parent department not found.", 404);
+            }
+
+            // Maximum supported hierarchy depth is 3: Directorate -> Department -> Section.
+            if (parent.ParentDepartmentId.HasValue)
+            {
+                var grandParent = await _departments.GetByIdAsync(parent.ParentDepartmentId.Value, cancellationToken);
+                if (grandParent?.ParentDepartmentId is not null)
+                {
+                    throw new AppException("Sections cannot have child sections. Select a directorate or department as parent.");
+                }
             }
         }
 

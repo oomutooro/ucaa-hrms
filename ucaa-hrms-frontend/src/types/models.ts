@@ -22,6 +22,21 @@ export interface Employee {
   email: string;
   phoneNumber: string;
   employeeId: string;
+  dateOfBirth: string;
+  firstEmploymentDate: string;
+  jobLevel: number;
+  annualLeaveEntitlementDays: number;
+  age: number;
+  yearsOfService: number;
+  mandatoryRetirementDate: string;
+  isEligibleForVoluntaryRetirement: boolean;
+  isAtOrAboveMandatoryRetirementAge: boolean;
+  isEligibleForGoldenHandshake: boolean;
+  isEligibleForLongServiceAward: boolean;
+  noticePeriodMonths: number;
+  serviceGratuityMonthsPerCompletedYear: number;
+  serviceGratuityTotalMonths: number;
+  redundancySeveranceMonths: number;
   departmentId: string;
   departmentName: string;
   jobTitle: string;
@@ -37,6 +52,8 @@ export interface LeaveRequest {
   status: number;
   startDate: string;
   endDate: string;
+  requestedDays: number;
+  sickLeavePayPercent?: number;
   reason: string;
   reviewerComment?: string;
 }

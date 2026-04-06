@@ -33,6 +33,9 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
             cfg.Property(e => e.PhoneNumber).HasMaxLength(20).IsRequired();
             cfg.Property(e => e.EmployeeId).HasMaxLength(40).IsRequired();
             cfg.Property(e => e.JobTitle).HasMaxLength(80).IsRequired();
+            cfg.Property(e => e.JobLevel).IsRequired();
+            cfg.Property(e => e.DateOfBirth).IsRequired();
+            cfg.Property(e => e.FirstEmploymentDate).IsRequired();
             cfg.HasOne(e => e.Department)
                 .WithMany(d => d.Employees)
                 .HasForeignKey(e => e.DepartmentId)

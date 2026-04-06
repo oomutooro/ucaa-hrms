@@ -9,6 +9,9 @@ public sealed class Employee : BaseEntity
     public string Email { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
     public string EmployeeId { get; set; } = string.Empty;
+    public DateOnly DateOfBirth { get; set; }
+    public DateOnly FirstEmploymentDate { get; set; }
+    public int JobLevel { get; set; }
     public Guid DepartmentId { get; set; }
     public Department? Department { get; set; }
     public string JobTitle { get; set; } = string.Empty;

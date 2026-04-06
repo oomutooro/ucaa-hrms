@@ -7,6 +7,7 @@ public sealed class ApplyLeaveRequestValidator : AbstractValidator<ApplyLeaveReq
 {
     public ApplyLeaveRequestValidator()
     {
+        RuleFor(x => x.LeaveType).IsInEnum();
         RuleFor(x => x.Reason).NotEmpty().MaximumLength(500);
         RuleFor(x => x.EndDate).GreaterThanOrEqualTo(x => x.StartDate);
     }
