@@ -31,6 +31,7 @@ function App() {
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="employees" element={<EmployeesPage />} />
             <Route path="departments" element={<DepartmentsPage />} />
+            <Route path="departments/:departmentId" element={<DepartmentsPage />} />
             <Route path="leave" element={<LeavePage />} />
             <Route path="payroll" element={<PayrollPage />} />
             <Route path="shifts" element={<ShiftsPage />} />

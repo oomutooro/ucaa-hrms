@@ -6,6 +6,7 @@ export default function EmployeesPage() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [search, setSearch] = useState("");
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -21,8 +22,15 @@ export default function EmployeesPage() {
   });
 
   const loadData = () => {
-    apiClient.get<Employee[]>("/employees").then((res) => setEmployees(res.data));
-    apiClient.get<Department[]>("/departments").then((res) => setDepartments(res.data));
+    apiClient.get<Employee[]>("/employees")
+      .then((res) => setEmployees(res.data))
+      .catch(() => setLoadError("Failed to load employees/departments. Please sign in again and refresh."));
+    apiClient.get<Department[]>("/departments")
+      .then((res) => {
+        setDepartments(res.data);
+        setLoadError(null);
+      })
+      .catch(() => setLoadError("Failed to load employees/departments. Please sign in again and refresh."));
   };
 
   useEffect(() => {
@@ -67,6 +75,11 @@ export default function EmployeesPage() {
         <h2>Employee Management</h2>
         <p>Workforce records and profiles</p>
       </div>
+      {loadError && (
+        <div className="card" style={{ marginBottom: 16, color: "var(--red)" }}>
+          {loadError}
+        </div>
+      )}
       <div className="content-grid">
         <form className="card" onSubmit={onSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <div className="card-header" style={{ marginBottom: 4 }}>
