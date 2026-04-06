@@ -19,6 +19,9 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
     public DbSet<ShiftAssignment> ShiftAssignments => Set<ShiftAssignment>();
     public DbSet<PayrollRecord> PayrollRecords => Set<PayrollRecord>();
     public DbSet<HrDocument> HrDocuments => Set<HrDocument>();
+    public DbSet<JobGrade> JobGrades => Set<JobGrade>();
+    public DbSet<JobDescription> JobDescriptions => Set<JobDescription>();
+    public DbSet<Position> Positions => Set<Position>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -88,6 +91,40 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
                 .WithMany()
                 .HasForeignKey(d => d.EmployeeId)
                 .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        builder.Entity<JobGrade>(cfg =>
+        {
+            cfg.HasIndex(g => g.GradeCode).IsUnique();
+            cfg.Property(g => g.GradeCode).HasMaxLength(40).IsRequired();
+            cfg.Property(g => g.GradeTitle).HasMaxLength(100).IsRequired();
+            cfg.Property(g => g.MinSalary).HasColumnType("decimal(18,2)").IsRequired();
+            cfg.Property(g => g.MaxSalary).HasColumnType("decimal(18,2)").IsRequired();
+        });
+
+        builder.Entity<JobDescription>(cfg =>
+        {
+            cfg.Property(j => j.Title).HasMaxLength(120).IsRequired();
+            cfg.Property(j => j.PurposeStatement).HasMaxLength(1000).IsRequired();
+            cfg.Property(j => j.KeyAccountabilities).HasMaxLength(4000).IsRequired();
+            cfg.Property(j => j.Qualifications).HasMaxLength(2000).IsRequired();
+            cfg.HasOne(j => j.JobGrade)
+                .WithMany(g => g.JobDescriptions)
+                .HasForeignKey(j => j.JobGradeId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<Position>(cfg =>
+        {
+            cfg.Property(p => p.Title).HasMaxLength(120).IsRequired();
+            cfg.HasOne(p => p.Department)
+                .WithMany()
+                .HasForeignKey(p => p.DepartmentId)
+                .OnDelete(DeleteBehavior.Restrict);
+            cfg.HasOne(p => p.JobDescription)
+                .WithMany(j => j.Positions)
+                .HasForeignKey(p => p.JobDescriptionId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

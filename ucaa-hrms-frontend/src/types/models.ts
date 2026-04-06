@@ -79,6 +79,36 @@ export interface ShiftAssignment {
   shiftCode: string;
 }
 
+export interface JobGrade {
+  id: string;
+  gradeCode: string;
+  gradeTitle: string;
+  minSalary: number;
+  maxSalary: number;
+}
+
+export interface JobDescription {
+  id: string;
+  title: string;
+  purposeStatement: string;
+  keyAccountabilities: string;
+  qualifications: string;
+  jobGradeId: string;
+  jobGradeCode: string;
+  jobGradeTitle: string;
+}
+
+export interface Position {
+  id: string;
+  title: string;
+  departmentId: string;
+  departmentName: string;
+  jobDescriptionId: string;
+  jobDescriptionTitle: string;
+  jobGradeCode: string;
+  approvedHeadcount: number;
+}
+
 export interface DocumentItem {
   id: string;
   employeeId?: string;

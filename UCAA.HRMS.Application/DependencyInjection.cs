@@ -16,6 +16,7 @@ public static class DependencyInjection
         services.AddScoped<IShiftService, ShiftService>();
         services.AddScoped<IDocumentService, DocumentService>();
         services.AddScoped<IDashboardService, DashboardService>();
+        services.AddScoped<IJobArchitectureService, JobArchitectureService>();
 
         return services;
     }

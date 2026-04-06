@@ -15,6 +15,10 @@ const navItems = [
     icon: <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
   },
   {
+    to: "/job-architecture", label: "Job Architecture",
+    icon: <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.1 15.9 0 13.36 0c-1.46 0-2.73.68-3.6 1.72L9 3 7.24 1.72C6.37.68 5.1 0 3.64 0 1.1 0-.01 2.1-.01 4.64c0 .48.11.92.18 1.36H0v2h20V6zm-9.5-2.5c.55-.84 1.49-1.4 2.56-1.4 1.38 0 2.5 1.12 2.5 2.5 0 .48-.33.9-.5 1.4H11V4.64c0-.72-.22-1.38-.5-1.87zm-7 1.1C3.5 3.12 4.62 2 6 2c1.07 0 2.01.56 2.56 1.4-.28.49-.5 1.15-.5 1.87V6H4.5c-.17-.5-.5-.92-.5-1.4zM0 20c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8H0v12zm8-7h8v2H8v-2zm0-4h8v2H8V9zM4 9h2v2H4V9zm0 4h2v2H4v-2z"/></svg>
+  },
+  {
     to: "/leave", label: "Leave Management",
     icon: <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
   },

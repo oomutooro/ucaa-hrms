@@ -6,6 +6,7 @@ import DashboardPage from "./pages/DashboardPage";
 import DepartmentsPage from "./pages/DepartmentsPage";
 import DocumentsPage from "./pages/DocumentsPage";
 import EmployeesPage from "./pages/EmployeesPage";
+import JobArchitecturePage from "./pages/JobArchitecturePage";
 import LeavePage from "./pages/LeavePage";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -32,6 +33,7 @@ function App() {
             <Route path="employees" element={<EmployeesPage />} />
             <Route path="departments" element={<DepartmentsPage />} />
             <Route path="departments/:departmentId" element={<DepartmentsPage />} />
+            <Route path="job-architecture" element={<JobArchitecturePage />} />
             <Route path="leave" element={<LeavePage />} />
             <Route path="payroll" element={<PayrollPage />} />
             <Route path="shifts" element={<ShiftsPage />} />
