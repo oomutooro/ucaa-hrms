@@ -22,6 +22,10 @@ public sealed class LeaveController : ControllerBase
     public Task<List<LeaveRequestDto>> GetAll(CancellationToken cancellationToken) =>
         _leaveService.ListAsync(cancellationToken);
 
+    [HttpGet("summary")]
+    public Task<LeaveSummaryDto> GetSummary(CancellationToken cancellationToken) =>
+        _leaveService.GetSummaryAsync(cancellationToken);
+
     [HttpPost("apply")]
     public Task<LeaveRequestDto> Apply([FromBody] ApplyLeaveRequest request, CancellationToken cancellationToken) =>
         _leaveService.ApplyAsync(request, cancellationToken);

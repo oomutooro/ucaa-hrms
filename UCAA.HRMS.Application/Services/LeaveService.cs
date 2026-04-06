@@ -31,6 +31,32 @@ public sealed class LeaveService : ILeaveService
         return data.Select(Map).ToList();
     }
 
+    public async Task<LeaveSummaryDto> GetSummaryAsync(CancellationToken cancellationToken = default)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var leaveRequests = await _leaveRequests.ListAsync(cancellationToken);
+        var employees = await _employees.ListAsync(cancellationToken);
+
+        return new LeaveSummaryDto(
+            leaveRequests.Count,
+            leaveRequests.Count(x => x.Status == LeaveStatus.Pending),
+            leaveRequests.Count(x => x.Status == LeaveStatus.Approved),
+            leaveRequests.Count(x => x.Status == LeaveStatus.Rejected),
+            leaveRequests.Count(x => x.Status == LeaveStatus.Approved && x.StartDate <= today && x.EndDate >= today),
+            leaveRequests.Count(x => x.Status == LeaveStatus.Approved && x.StartDate > today),
+            GetPolicyRules(),
+            employees
+                .OrderBy(x => x.FullName)
+                .Select(employee => new LeaveBalanceDto(
+                    employee.Id,
+                    employee.FullName,
+                    employee.Department?.Name ?? string.Empty,
+                    GetAnnualLeaveEntitlementDays(employee.JobLevel),
+                    employee.AnnualLeaveBalanceDays,
+                    GetAnnualLeaveEntitlementDays(employee.JobLevel) - employee.AnnualLeaveBalanceDays))
+                .ToList());
+    }
+
     public async Task<LeaveRequestDto> ApplyAsync(ApplyLeaveRequest request, CancellationToken cancellationToken = default)
     {
         if (request.EndDate < request.StartDate)
@@ -129,6 +155,26 @@ public sealed class LeaveService : ILeaveService
             leaveRequest.Reason,
             leaveRequest.ReviewerComment);
 
+    private List<LeavePolicyRuleDto> GetPolicyRules() =>
+        Enum.GetValues<LeaveType>()
+            .Select(leaveType => new LeavePolicyRuleDto(
+                leaveType,
+                GetLeaveTypeLabel(leaveType),
+                _leavePolicy.GetMaxDaysPerRequest(leaveType)))
+            .ToList();
+
+    private static string GetLeaveTypeLabel(LeaveType leaveType) => leaveType switch
+    {
+        LeaveType.Annual => "Annual Leave",
+        LeaveType.Sick => "Sick Leave",
+        LeaveType.Maternity => "Maternity Leave",
+        LeaveType.Paternity => "Paternity Leave",
+        LeaveType.Compassionate => "Compassionate Leave",
+        LeaveType.Study => "Study Leave",
+        LeaveType.Emergency => "Emergency Leave",
+        _ => leaveType.ToString()
+    };
+
     private static int? GetSickLeavePayPercent(LeaveRequest leaveRequest)
     {
         if (leaveRequest.LeaveType != LeaveType.Sick)
@@ -149,4 +195,6 @@ public sealed class LeaveService : ILeaveService
 
         return 50;
     }
+
+    private static int GetAnnualLeaveEntitlementDays(int jobLevel) => jobLevel >= 10 ? 36 : 30;
 }

@@ -5,6 +5,7 @@ namespace UCAA.HRMS.Application.Services;
 public interface ILeaveService
 {
     Task<List<LeaveRequestDto>> ListAsync(CancellationToken cancellationToken = default);
+    Task<LeaveSummaryDto> GetSummaryAsync(CancellationToken cancellationToken = default);
     Task<LeaveRequestDto> ApplyAsync(ApplyLeaveRequest request, CancellationToken cancellationToken = default);
     Task<LeaveRequestDto> ReviewAsync(Guid id, ReviewLeaveRequest request, CancellationToken cancellationToken = default);
 }

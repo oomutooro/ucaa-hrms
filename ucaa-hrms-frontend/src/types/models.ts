@@ -58,6 +58,32 @@ export interface LeaveRequest {
   reviewerComment?: string;
 }
 
+export interface LeavePolicyRule {
+  leaveType: number;
+  leaveTypeLabel: string;
+  maxDaysPerRequest: number;
+}
+
+export interface LeaveBalance {
+  employeeId: string;
+  employeeName: string;
+  departmentName: string;
+  annualLeaveEntitlementDays: number;
+  annualLeaveBalanceDays: number;
+  annualLeaveUsedDays: number;
+}
+
+export interface LeaveSummary {
+  totalRequests: number;
+  pendingRequests: number;
+  approvedRequests: number;
+  rejectedRequests: number;
+  employeesCurrentlyOnLeave: number;
+  upcomingApprovedLeaves: number;
+  policyRules: LeavePolicyRule[];
+  leaveBalances: LeaveBalance[];
+}
+
 export interface PayrollRecord {
   id: string;
   employeeId: string;

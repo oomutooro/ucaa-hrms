@@ -15,6 +15,29 @@ public sealed record LeaveRequestDto(
     string Reason,
     string? ReviewerComment);
 
+public sealed record LeavePolicyRuleDto(
+    LeaveType LeaveType,
+    string LeaveTypeLabel,
+    int MaxDaysPerRequest);
+
+public sealed record LeaveBalanceDto(
+    Guid EmployeeId,
+    string EmployeeName,
+    string DepartmentName,
+    int AnnualLeaveEntitlementDays,
+    decimal AnnualLeaveBalanceDays,
+    decimal AnnualLeaveUsedDays);
+
+public sealed record LeaveSummaryDto(
+    int TotalRequests,
+    int PendingRequests,
+    int ApprovedRequests,
+    int RejectedRequests,
+    int EmployeesCurrentlyOnLeave,
+    int UpcomingApprovedLeaves,
+    List<LeavePolicyRuleDto> PolicyRules,
+    List<LeaveBalanceDto> LeaveBalances);
+
 public sealed record ApplyLeaveRequest(
     Guid EmployeeId,
     LeaveType LeaveType,
