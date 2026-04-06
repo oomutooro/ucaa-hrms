@@ -18,6 +18,7 @@ public static class DependencyInjection
         services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<IJobArchitectureService, JobArchitectureService>();
         services.AddScoped<IRecruitmentService, RecruitmentService>();
+        services.AddScoped<IOnboardingService, OnboardingService>();
 
         return services;
     }

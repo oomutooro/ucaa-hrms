@@ -149,3 +149,57 @@ export interface DocumentItem {
   contentType: string;
   fileSizeBytes: number;
 }
+
+export interface OnboardingTemplate {
+  id: string;
+  name: string;
+  description: string;
+  taskCount: number;
+}
+
+export interface OnboardingTemplateTask {
+  id: string;
+  templateId: string;
+  title: string;
+  category: string;
+  isRequired: boolean;
+  sortOrder: number;
+}
+
+export interface EmployeeOnboarding {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  applicationId?: string | null;
+  startDate: string;
+  targetCompletionDate: string;
+  status: number;
+  statusLabel: string;
+  notes?: string | null;
+  totalItems: number;
+  completedItems: number;
+}
+
+export interface OnboardingDetail {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  applicationId?: string | null;
+  startDate: string;
+  targetCompletionDate: string;
+  status: number;
+  statusLabel: string;
+  notes?: string | null;
+  items: OnboardingItem[];
+}
+
+export interface OnboardingItem {
+  id: string;
+  title: string;
+  category: string;
+  isRequired: boolean;
+  sortOrder: number;
+  isCompleted: boolean;
+  completedAt?: string | null;
+  notes?: string | null;
+}

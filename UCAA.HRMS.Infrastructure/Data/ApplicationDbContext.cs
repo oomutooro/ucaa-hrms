@@ -24,6 +24,10 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
     public DbSet<Position> Positions => Set<Position>();
     public DbSet<JobRequisition> JobRequisitions => Set<JobRequisition>();
     public DbSet<JobApplication> JobApplications => Set<JobApplication>();
+    public DbSet<OnboardingTemplate> OnboardingTemplates => Set<OnboardingTemplate>();
+    public DbSet<OnboardingTemplateTask> OnboardingTemplateTasks => Set<OnboardingTemplateTask>();
+    public DbSet<EmployeeOnboarding> EmployeeOnboardings => Set<EmployeeOnboarding>();
+    public DbSet<OnboardingItem> OnboardingItems => Set<OnboardingItem>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -153,6 +157,42 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
             cfg.HasOne(a => a.Requisition)
                 .WithMany(r => r.Applications)
                 .HasForeignKey(a => a.RequisitionId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<OnboardingTemplate>(cfg =>
+        {
+            cfg.Property(t => t.Name).HasMaxLength(120).IsRequired();
+            cfg.Property(t => t.Description).HasMaxLength(500).IsRequired();
+        });
+
+        builder.Entity<OnboardingTemplateTask>(cfg =>
+        {
+            cfg.Property(t => t.Title).HasMaxLength(200).IsRequired();
+            cfg.Property(t => t.Category).HasMaxLength(60).IsRequired();
+            cfg.HasOne(t => t.Template)
+                .WithMany(tp => tp.Tasks)
+                .HasForeignKey(t => t.TemplateId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<EmployeeOnboarding>(cfg =>
+        {
+            cfg.Property(ob => ob.Notes).HasMaxLength(1000);
+            cfg.HasOne(ob => ob.Employee)
+                .WithMany()
+                .HasForeignKey(ob => ob.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<OnboardingItem>(cfg =>
+        {
+            cfg.Property(i => i.Title).HasMaxLength(200).IsRequired();
+            cfg.Property(i => i.Category).HasMaxLength(60).IsRequired();
+            cfg.Property(i => i.Notes).HasMaxLength(1000);
+            cfg.HasOne(i => i.Onboarding)
+                .WithMany(ob => ob.Items)
+                .HasForeignKey(i => i.OnboardingId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
     }
