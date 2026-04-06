@@ -1,0 +1,6 @@
+@UCAA.HRMS.API_HostAddress = http://localhost:5161
+
+GET {{UCAA.HRMS.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

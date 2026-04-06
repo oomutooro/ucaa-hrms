@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="UCAA.HRMS.API/UCAA.HRMS.API.csproj" />
+  <Project Path="UCAA.HRMS.Application/UCAA.HRMS.Application.csproj" />
+  <Project Path="UCAA.HRMS.Domain/UCAA.HRMS.Domain.csproj" />
+  <Project Path="UCAA.HRMS.Infrastructure/UCAA.HRMS.Infrastructure.csproj" />
+  <Project Path="UCAA.HRMS.Tests/UCAA.HRMS.Tests.csproj" />
+</Solution>

@@ -1,0 +1,15 @@
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\obj\Debug\net8.0\UCAA.HRMS.Application.csproj.AssemblyReference.cache
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\obj\Debug\net8.0\UCAA.HRMS.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\obj\Debug\net8.0\UCAA.HRMS.Application.AssemblyInfoInputs.cache
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\obj\Debug\net8.0\UCAA.HRMS.Application.AssemblyInfo.cs
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\obj\Debug\net8.0\UCAA.HRMS.Application.csproj.CoreCompileInputs.cache
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\bin\Debug\net8.0\UCAA.HRMS.Application.deps.json
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\bin\Debug\net8.0\UCAA.HRMS.Application.dll
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\bin\Debug\net8.0\UCAA.HRMS.Application.pdb
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\bin\Debug\net8.0\UCAA.HRMS.Domain.dll
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\bin\Debug\net8.0\UCAA.HRMS.Domain.pdb
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\obj\Debug\net8.0\UCAA.HRM.38307FAD.Up2Date
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\obj\Debug\net8.0\UCAA.HRMS.Application.dll
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\obj\Debug\net8.0\refint\UCAA.HRMS.Application.dll
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\obj\Debug\net8.0\UCAA.HRMS.Application.pdb
+C:\Users\Omutooro\Desktop\Projects\UCAA_HR_C#\UCAA.HRMS.Application\obj\Debug\net8.0\ref\UCAA.HRMS.Application.dll
