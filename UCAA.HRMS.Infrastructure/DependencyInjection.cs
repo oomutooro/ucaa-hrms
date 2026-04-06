@@ -49,6 +49,7 @@ public static class DependencyInjection
         services.AddScoped<IShiftRepository, ShiftRepository>();
         services.AddScoped<IDocumentRepository, DocumentRepository>();
         services.AddScoped<IJobArchitectureRepository, JobArchitectureRepository>();
+        services.AddScoped<IRecruitmentRepository, RecruitmentRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         var storageRoot = configuration["Storage:RootPath"] ?? Path.Combine(AppContext.BaseDirectory, "uploads");

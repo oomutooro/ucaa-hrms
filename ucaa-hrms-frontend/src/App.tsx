@@ -8,6 +8,7 @@ import DocumentsPage from "./pages/DocumentsPage";
 import EmployeesPage from "./pages/EmployeesPage";
 import JobArchitecturePage from "./pages/JobArchitecturePage";
 import LeavePage from "./pages/LeavePage";
+import RecruitmentPage from "./pages/RecruitmentPage";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import PayrollPage from "./pages/PayrollPage";
@@ -34,6 +35,7 @@ function App() {
             <Route path="departments" element={<DepartmentsPage />} />
             <Route path="departments/:departmentId" element={<DepartmentsPage />} />
             <Route path="job-architecture" element={<JobArchitecturePage />} />
+            <Route path="recruitment" element={<RecruitmentPage />} />
             <Route path="leave" element={<LeavePage />} />
             <Route path="payroll" element={<PayrollPage />} />
             <Route path="shifts" element={<ShiftsPage />} />

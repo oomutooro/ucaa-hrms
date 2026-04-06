@@ -109,6 +109,38 @@ export interface Position {
   approvedHeadcount: number;
 }
 
+export interface JobRequisition {
+  id: string;
+  requisitionNumber: string;
+  positionId: string;
+  positionTitle: string;
+  departmentId: string;
+  departmentName: string;
+  vacanciesRequested: number;
+  justification: string;
+  closingDate: string;
+  status: number;
+  statusLabel: string;
+  applicationCount: number;
+}
+
+export interface JobApplication {
+  id: string;
+  requisitionId: string;
+  requisitionNumber: string;
+  positionTitle: string;
+  applicantName: string;
+  applicantEmail: string;
+  applicantPhone: string;
+  isInternal: boolean;
+  employeeId?: string | null;
+  status: number;
+  statusLabel: string;
+  reviewNotes?: string | null;
+  interviewDate?: string | null;
+  appliedAtUtc: string;
+}
+
 export interface DocumentItem {
   id: string;
   employeeId?: string;

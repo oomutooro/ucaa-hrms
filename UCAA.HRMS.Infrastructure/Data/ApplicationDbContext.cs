@@ -22,6 +22,8 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
     public DbSet<JobGrade> JobGrades => Set<JobGrade>();
     public DbSet<JobDescription> JobDescriptions => Set<JobDescription>();
     public DbSet<Position> Positions => Set<Position>();
+    public DbSet<JobRequisition> JobRequisitions => Set<JobRequisition>();
+    public DbSet<JobApplication> JobApplications => Set<JobApplication>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -125,6 +127,33 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
                 .WithMany(j => j.Positions)
                 .HasForeignKey(p => p.JobDescriptionId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<JobRequisition>(cfg =>
+        {
+            cfg.HasIndex(r => r.RequisitionNumber).IsUnique();
+            cfg.Property(r => r.RequisitionNumber).HasMaxLength(30).IsRequired();
+            cfg.Property(r => r.Justification).HasMaxLength(1000).IsRequired();
+            cfg.HasOne(r => r.Position)
+                .WithMany()
+                .HasForeignKey(r => r.PositionId)
+                .OnDelete(DeleteBehavior.Restrict);
+            cfg.HasOne(r => r.Department)
+                .WithMany()
+                .HasForeignKey(r => r.DepartmentId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<JobApplication>(cfg =>
+        {
+            cfg.Property(a => a.ApplicantName).HasMaxLength(120).IsRequired();
+            cfg.Property(a => a.ApplicantEmail).HasMaxLength(120).IsRequired();
+            cfg.Property(a => a.ApplicantPhone).HasMaxLength(20).IsRequired();
+            cfg.Property(a => a.ReviewNotes).HasMaxLength(1000);
+            cfg.HasOne(a => a.Requisition)
+                .WithMany(r => r.Applications)
+                .HasForeignKey(a => a.RequisitionId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
