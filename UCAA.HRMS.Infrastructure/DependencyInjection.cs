@@ -22,7 +22,7 @@ public static class DependencyInjection
         services.Configure<LeavePolicyOptions>(configuration.GetSection(LeavePolicyOptions.SectionName));
 
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
             {

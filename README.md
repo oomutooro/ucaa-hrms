@@ -3,7 +3,7 @@
 Production-ready starter implementation for Uganda Civil Aviation Authority (UCAA) using:
 - Backend: ASP.NET Core Web API (.NET 8)
 - Frontend: React + TypeScript
-- Database: PostgreSQL + Entity Framework Core
+- Database: Microsoft SQL Server + Entity Framework Core
 - Auth: Local JWT (modular and ready for future Microsoft Entra ID provider)
 
 ## 1. Solution Overview
@@ -108,7 +108,7 @@ On startup, migration is applied and seed executes:
 ### Prerequisites
 - .NET SDK 8+
 - Node.js 20+
-- PostgreSQL 15+
+- SQL Server 2019+ (or SQL Server Express)
 
 ### Backend
 1. Update connection string and JWT key in `UCAA.HRMS.API/appsettings.Development.json`.
@@ -150,7 +150,7 @@ npm run build
 
 ## 7. Docker Deployment
 
-A full `docker-compose.yml` is included for PostgreSQL + API + Frontend.
+A full `docker-compose.yml` is included for SQL Server + API + Frontend.
 
 ```bash
 docker compose up --build
@@ -159,9 +159,25 @@ docker compose up --build
 Services:
 - Frontend: `http://localhost:3000`
 - API: `http://localhost:8080`
-- PostgreSQL: `localhost:5432`
+- SQL Server: `localhost:1433`
 
-## 8. Future Entra ID Integration Path
+## 8. IIS Deployment (Windows)
+
+1. Install prerequisites on the IIS host:
+  - IIS with ASP.NET Core Hosting Bundle (.NET 8)
+  - SQL Server reachable from the IIS host
+2. Publish the API:
+  ```bash
+  dotnet publish UCAA.HRMS.API/UCAA.HRMS.API.csproj -c Release -o .\\publish\\api
+  ```
+3. Create an IIS website/app pointing to `.\\publish\\api`.
+4. Set app pool to `No Managed Code`.
+5. Configure environment variables / `appsettings.Production.json` with SQL Server connection string.
+6. Ensure `ConnectionStrings:DefaultConnection` targets SQL Server.
+7. Grant the IIS app pool identity access to the upload directory configured in `Storage:RootPath`.
+8. Start site and verify `/swagger` or health endpoints.
+
+## 9. Future Entra ID Integration Path
 
 Authentication is intentionally abstracted:
 - `IAuthProvider` in Application layer
@@ -174,14 +190,14 @@ To integrate Microsoft Entra ID later:
 3. Keep identity mapping by email as current unique key.
 4. Add token validation/issuer settings without changing business controllers.
 
-## 9. Key Configuration
+## 10. Key Configuration
 
 - JWT: `Jwt` section in API settings
 - Leave policy: `LeavePolicy` section
 - CORS frontend URL: `FrontendUrl`
 - File uploads root: `Storage:RootPath`
 
-## 10. Notes
+## 11. Notes
 
 - This implementation is production-oriented starter architecture and intentionally extensible.
 - Payroll and permissions are structured for future CBA-driven rule engines and policy-based authorization.

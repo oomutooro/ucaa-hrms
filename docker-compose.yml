@@ -1,16 +1,15 @@
 services:
-  postgres:
-    image: postgres:16
-    container_name: ucaa_hrms_postgres
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ucaa_hrms_sqlserver
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: ucaa_hrms
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "StrongPassword123!"
     ports:
-      - "5432:5432"
+      - "1433:1433"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - sqlserver_data:/var/opt/mssql
 
   api:
     build:
@@ -19,10 +18,10 @@ services:
     container_name: ucaa_hrms_api
     restart: unless-stopped
     depends_on:
-      - postgres
+      - sqlserver
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=ucaa_hrms;Username=postgres;Password=postgres
+      ConnectionStrings__DefaultConnection: Server=sqlserver,1433;Database=ucaa_hrms;User Id=sa;Password=StrongPassword123!;TrustServerCertificate=True;MultipleActiveResultSets=true
       Jwt__Issuer: UCAA.HRMS
       Jwt__Audience: UCAA.HRMS.Client
       Jwt__Key: CHANGE_ME_TO_A_LONG_RANDOM_SECRET_KEY_32_CHARS_MIN
@@ -46,4 +45,4 @@ services:
       - "3000:80"
 
 volumes:
-  postgres_data:
+  sqlserver_data:
